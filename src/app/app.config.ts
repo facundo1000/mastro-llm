@@ -27,7 +27,15 @@ import {
 } from '@ng-icons/lucide';
 
 import { routes } from './app.routes';
-import { authInterceptor } from './core/api/auth.interceptor';
+import { authInterceptor } from '@/infrastructure/api/auth.interceptor';
+import { ChatRepository } from '@/domain/ports/chat.repository';
+import { PdfRepository } from '@/domain/ports/pdf.repository';
+import { NotebookStoragePort } from '@/domain/ports/notebook-storage.port';
+import { SettingsStoragePort } from '@/domain/ports/settings-storage.port';
+import { HttpChatRepository } from '@/infrastructure/api/http-chat.repository';
+import { HttpPdfRepository } from '@/infrastructure/api/http-pdf.repository';
+import { LocalNotebookStorage } from '@/infrastructure/storage/local-notebook.storage';
+import { LocalSettingsStorage } from '@/infrastructure/storage/local-settings.storage';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,6 +43,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),
+    { provide: ChatRepository, useClass: HttpChatRepository },
+    { provide: PdfRepository, useClass: HttpPdfRepository },
+    { provide: NotebookStoragePort, useClass: LocalNotebookStorage },
+    { provide: SettingsStoragePort, useClass: LocalSettingsStorage },
     provideIcons({
       lucideFileText,
       lucideFile,
