@@ -3,13 +3,13 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { PdfRepository } from '@/domain/ports/pdf.repository';
 import { ApiErrorBody, PdfExtractRequest, PdfExtractResponse } from '@/domain/entities';
-import { SettingsService } from '@/application/state/settings.service';
+import { APP_ENV } from '@/domain/tokens/app-env.token';
 import { ApiError } from './api-error';
 
 @Injectable()
 export class HttpPdfRepository extends PdfRepository {
   private readonly http = inject(HttpClient);
-  private readonly settings = inject(SettingsService);
+  private readonly env = inject(APP_ENV);
 
   extract(req: PdfExtractRequest): Observable<PdfExtractResponse> {
     return this.http
@@ -18,8 +18,7 @@ export class HttpPdfRepository extends PdfRepository {
   }
 
   private url(path: string): string {
-    const base = (this.settings.baseUrl() || '').replace(/\/+$/, '');
-    return `${base}${path}`;
+    return `${this.env.apiUrl.replace(/\/+$/, '')}${path}`;
   }
 
   private toApiError(err: unknown): Observable<never> {

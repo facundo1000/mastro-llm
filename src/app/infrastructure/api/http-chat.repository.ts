@@ -3,13 +3,13 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, throwError } from 'rxjs';
 import { ChatRepository } from '@/domain/ports/chat.repository';
 import { ApiErrorBody, ChatRequest, ChatResponse, HealthResponse } from '@/domain/entities';
-import { SettingsService } from '@/application/state/settings.service';
+import { APP_ENV } from '@/domain/tokens/app-env.token';
 import { ApiError } from './api-error';
 
 @Injectable()
 export class HttpChatRepository extends ChatRepository {
   private readonly http = inject(HttpClient);
-  private readonly settings = inject(SettingsService);
+  private readonly env = inject(APP_ENV);
 
   health(): Observable<HealthResponse> {
     return this.http
@@ -24,8 +24,7 @@ export class HttpChatRepository extends ChatRepository {
   }
 
   private url(path: string): string {
-    const base = (this.settings.baseUrl() || '').replace(/\/+$/, '');
-    return `${base}${path}`;
+    return `${this.env.apiUrl.replace(/\/+$/, '')}${path}`;
   }
 
   private toApiError(err: unknown): Observable<never> {

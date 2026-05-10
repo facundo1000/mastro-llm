@@ -28,6 +28,8 @@ import {
 
 import { routes } from './app.routes';
 import { authInterceptor } from '@/infrastructure/api/auth.interceptor';
+import { APP_ENV } from '@/domain/tokens/app-env.token';
+import { environment } from '../environments/environment';
 import { ChatRepository } from '@/domain/ports/chat.repository';
 import { PdfRepository } from '@/domain/ports/pdf.repository';
 import { NotebookStoragePort } from '@/domain/ports/notebook-storage.port';
@@ -43,6 +45,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideAnimations(),
+    { provide: APP_ENV, useValue: environment },
     { provide: ChatRepository, useClass: HttpChatRepository },
     { provide: PdfRepository, useClass: HttpPdfRepository },
     { provide: NotebookStoragePort, useClass: LocalNotebookStorage },

@@ -5,7 +5,10 @@
   "packageManager": "pnpm@9.0.0",
   "scripts": {
     "ng": "ng",
+    "generate-env": "node scripts/generate-env.mjs",
+    "prestart": "node scripts/generate-env.mjs",
     "start": "ng serve",
+    "prebuild": "node scripts/generate-env.mjs",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

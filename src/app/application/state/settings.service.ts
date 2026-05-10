@@ -9,8 +9,6 @@ export class SettingsService {
   private readonly _settings = signal<AppSettings>(this.storage.load());
 
   readonly settings = this._settings.asReadonly();
-  readonly baseUrl = computed(() => this._settings().baseUrl);
-  readonly authToken = computed(() => this._settings().authToken);
   readonly selectedProvider = computed(() => this._settings().selectedProvider);
   readonly selectedModel = computed(() => this._settings().selectedModel);
 

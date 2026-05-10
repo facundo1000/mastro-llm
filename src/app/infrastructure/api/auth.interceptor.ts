@@ -1,10 +1,9 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { SettingsService } from '@/application/state/settings.service';
+import { APP_ENV } from '@/domain/tokens/app-env.token';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const settings = inject(SettingsService);
-  const token = settings.authToken();
-  if (!token) return next(req);
-  return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
+  const { authToken } = inject(APP_ENV);
+  if (!authToken) return next(req);
+  return next(req.clone({ setHeaders: { Authorization: `Bearer ${authToken}` } }));
 };
